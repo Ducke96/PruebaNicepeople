@@ -31,7 +31,7 @@ function ProfilePage() {
   
   const [todos , setTodos]= React.useState()
   const [historial , setHistorial]= React.useState()
-  const [climaCity , setClimaCity]= React.useState()
+  const [climaCity , setClimaCity]= React.useState([])
   const [ciudades , setCiudades]= React.useState([])
 
   const [pais , setPais]= React.useState({
@@ -62,6 +62,35 @@ function ProfilePage() {
 
 
 
+    
+  const ClimaCityClick = (value , city) => {
+
+
+    console.log(value +"-----"+ city)
+    fetchApiClima(value , city)
+
+
+   
+
+  }
+
+  function DivClima(props){
+    
+      return(
+        props.name ? <div>{props.name} <br/> 
+        weather : {props.weather} <br/> 
+        main : {props.main} <br/> 
+
+        humedad : {props.entorno}% <br/> 
+        temperatura : {props.temperatura}° kelvin <br/> 
+        temperatura max: {props.tempMax}° kelvin <br/>
+        temperatura min: {props.tempMin }° kelvin <br/>
+        </div> : <div>sin clima</div>
+      )
+  }
+
+
+
 
   async function fetchApiClima(value , nombreCity){
 
@@ -71,10 +100,7 @@ function ProfilePage() {
     setClimaCity(responseJSON)
     console.log(responseJSON)
 
-    return (
-      <div>{this.climaCity.name}</div>
-   )
-   
+    
 
   }
 
@@ -307,8 +333,11 @@ function ProfilePage() {
             
 
             <Row>
+              
                 <Col className="ml-auto mr-auto" md="6">
+                
                   <ul className="list-unstyled follows">
+                  <h4>{climaCity.name ? <DivClima name={climaCity.name} weather={climaCity.weather[0].description} main={climaCity.weather[0].main} entorno={climaCity.main.humidity} temperatura={climaCity.main.temp} tempMax={climaCity.main.temp_max} tempMin={climaCity.main.temp_min}/> : "Cargando..."} </h4>
                   { !ciudades ? 'cargando....' :
                    ciudades.map( (ciudad , index)=>{
                    
@@ -326,9 +355,13 @@ function ProfilePage() {
                        <Button
                          className="btn-link"
                          color="primary"
-                        href={`http://api.openweathermap.org/data/2.5/weather?q=${ciudad},${pais.value}&APPID=947586f18a3597efa4403d74f5a2a150`}
+                         onClick={() => {
+                          ClimaCityClick(pais.pais , ciudad)
+                          
+                        }}
                         
                        >
+                         
                 {ciudad}
               </Button>
                       
